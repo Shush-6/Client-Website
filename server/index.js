@@ -1,53 +1,39 @@
-require("dotenv").config();
-const express = require('express');
-const cors = require('cors');
-// const { Pool } = require('pg');
-const nodemailer = require('nodemailer');
-require('dotenv').config();
+import express from "express";
+import dotenv from "dotenv";
+import pg from "pg";
+import cors from "cors";
+import nodemailer from "nodemailer";
+
+dotenv.config();
 
 const app = express();
 const PORT = process.env.PORT || 5000;
 
-// Middleware
 app.use(cors({ origin: process.env.CLIENT_URL || 'http://localhost:3000' }));
 app.use(express.json());
 
-// PostgreSQL connection
-import pg from "pg";
 const { Pool } = pg;
 
 const pool = new Pool({
   connectionString: process.env.DATABASE_URL,
-  ssl: {
-    rejectUnauthorized: false,
-  },
+  ssl: { rejectUnauthorized: false },
 });
 
-// Nodemailer transporter (configure with your email service)
 const transporter = nodemailer.createTransport({
-  service: 'gmail',
+  service: "gmail",
   auth: {
     user: process.env.SMTP_USER,
     pass: process.env.SMTP_PASS,
   },
-  tls: {
-    rejectUnauthorized: false
-  }
 });
-
-// ─── Routes ────────────────────────────────────────────────────────────────
-
-// GET all services
 app.get('/api/services', async (req, res) => {
   try {
-  const result = await pool.query(
-    "INSERT INTO users(name, email) VALUES($1, $2)",
-    [name, email]
-  );
-  console.log("DB insert success");
-} catch (err) {
-  console.error("DB ERROR:", err);
-}
+    const result = await pool.query("SELECT * FROM contact_messages");
+    res.json(result.rows);
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: "DB error" });
+  }
 });
 
 // POST contact form → save to DB + email Vibha
