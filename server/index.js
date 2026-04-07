@@ -1,7 +1,7 @@
 require("dotenv").config();
 const express = require('express');
 const cors = require('cors');
-const { Pool } = require('pg');
+// const { Pool } = require('pg');
 const nodemailer = require('nodemailer');
 require('dotenv').config();
 
@@ -13,6 +13,9 @@ app.use(cors({ origin: process.env.CLIENT_URL || 'http://localhost:3000' }));
 app.use(express.json());
 
 // PostgreSQL connection
+import pg from "pg";
+const { Pool } = pg;
+
 const pool = new Pool({
   connectionString: process.env.DATABASE_URL,
   ssl: {
@@ -37,12 +40,14 @@ const transporter = nodemailer.createTransport({
 // GET all services
 app.get('/api/services', async (req, res) => {
   try {
-    const result = await pool.query('SELECT * FROM services ORDER BY id');
-    res.json(result.rows);
-  } catch (err) {
-    console.error(err);
-    res.status(500).json({ error: 'Failed to fetch services' });
-  }
+  const result = await pool.query(
+    "INSERT INTO users(name, email) VALUES($1, $2)",
+    [name, email]
+  );
+  console.log("DB insert success");
+} catch (err) {
+  console.error("DB ERROR:", err);
+}
 });
 
 // POST contact form → save to DB + email Vibha
@@ -120,5 +125,4 @@ console.log("DB INSERT SUCCESS:", result.rows);
 app.get('/api/health', (req, res) => res.json({ status: 'OK', service: 'Golden Hands API' }));
 
 app.listen(PORT, () => console.log(`✨ Golden Hands server running on port ${PORT}`));
-console.error("FULL ERROR:", err);
-console.log("DB PORT:", process.env.DB_PORT);
+console.log("DB PORT:", process.env.DATABASE_URL);
