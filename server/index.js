@@ -9,7 +9,12 @@ dotenv.config();
 const app = express();
 const PORT = process.env.PORT || 5000;
 
-app.use(cors({ origin: process.env.CLIENT_URL || 'http://localhost:3000' }));
+app.use(cors({
+  origin: [
+    'http://localhost:3000',
+    'https://reiki-website.netlify.app'
+  ]
+}));
 app.use(express.json());
 
 const { Pool } = pg;
@@ -27,8 +32,8 @@ const transporter = nodemailer.createTransport({
   },
 });
 app.get('/api/services', async (req, res) => {
-  try {
-    const result = await pool.query("SELECT * FROM contact_messages");
+    try {
+    const result = await pool.query("SELECT * FROM services ORDER BY id");
     res.json(result.rows);
   } catch (err) {
     console.error(err);

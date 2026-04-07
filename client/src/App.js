@@ -3,6 +3,7 @@ import './App.css';
 import axios from 'axios';
 
 import VIBHA_PHOTO from './photos/WhatsApp Image 2025-09-09 at 21.14.16_71fcf7cc.jpg';
+const API = "https://golden-hands.onrender.com";
 function App() {
   const [services, setServices] = useState([]);
   const [form, setForm] = useState({ name: '', email: '', phone: '', service: '', message: '' });
@@ -11,7 +12,7 @@ function App() {
   const [menuOpen, setMenuOpen] = useState(false);
 
   useEffect(() => {
-   axios.get('/api/services')
+  axios.get(`${API}/api/services`)
   .then(res => {
     if (Array.isArray(res.data)) {
       setServices(res.data);
@@ -52,7 +53,7 @@ function App() {
     e.preventDefault();
     setStatus({ loading: true, success: false, error: '' });
     try {
-      await axios.post('/api/contact', form);
+      await axios.post(`${API}/api/contact`, form);
       setStatus({ loading: false, success: true, error: '' });
       setForm({ name: '', email: '', phone: '', service: '', message: '' });
     } catch (err) {
