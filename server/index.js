@@ -55,10 +55,12 @@ app.post('/api/contact', async (req, res) => {
 
   try {
     // 1. Save to PostgreSQL
-    await pool.query(
-      'INSERT INTO contact_messages (name, email, phone, service, message) VALUES ($1,$2,$3,$4,$5)',
-      [name, email, phone || null, service || null, message]
-    );
+   const result = await pool.query(
+  'INSERT INTO contact_messages (name, email, phone, service, message) VALUES ($1,$2,$3,$4,$5) RETURNING *',
+  [name, email, phone || null, service || null, message]
+);
+
+console.log("DB INSERT SUCCESS:", result.rows);
 
     // 2. Send email to Vibha
     const mailToVibha = {
@@ -118,4 +120,5 @@ app.post('/api/contact', async (req, res) => {
 app.get('/api/health', (req, res) => res.json({ status: 'OK', service: 'Golden Hands API' }));
 
 app.listen(PORT, () => console.log(`✨ Golden Hands server running on port ${PORT}`));
+console.error("FULL ERROR:", err);
 console.log("DB PORT:", process.env.DB_PORT);
