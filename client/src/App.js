@@ -3,7 +3,7 @@ import './App.css';
 import axios from 'axios';
 
 import VIBHA_PHOTO from './photos/WhatsApp Image 2025-09-09 at 21.14.16_71fcf7cc.jpg';
-const API = "https://golden-hands.onrender.com";
+const API = process.env.REACT_APP_API_URL;
 function App() {
   const [services, setServices] = useState([]);
   const [form, setForm] = useState({ name: '', email: '', phone: '', service: '', message: '' });
