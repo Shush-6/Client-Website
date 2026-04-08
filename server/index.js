@@ -1,43 +1,52 @@
-import express from "express";
-import dotenv from "dotenv";
-import pg from "pg";
-import cors from "cors";
-import nodemailer from "nodemailer";
-
-dotenv.config();
+const express = require('express');
+const cors = require('cors');
+const { Pool } = require('pg');
+const nodemailer = require('nodemailer');
+require('dotenv').config();
 
 const app = express();
 const PORT = process.env.PORT || 5000;
 
+// Middleware
 app.use(cors({
-  origin: [
-    'http://localhost:3000',
-    'https://reiki-website.netlify.app'
-  ]
+   origin: "http://localhost:3000",
+  methods: ["GET", "POST"],
+  credentials: true
 }));
+
+
 app.use(express.json());
 
-const { Pool } = pg;
-
+// PostgreSQL connection
 const pool = new Pool({
   connectionString: process.env.DATABASE_URL,
-  ssl: { rejectUnauthorized: false },
+  ssl: process.env.NODE_ENV === "production"
+    ? { rejectUnauthorized: false }
+    : false,
 });
 
+// Nodemailer transporter (configure with your email service)
 const transporter = nodemailer.createTransport({
-  service: "gmail",
+  service: 'gmail',
   auth: {
     user: process.env.SMTP_USER,
     pass: process.env.SMTP_PASS,
   },
+  tls: {
+    rejectUnauthorized: false
+  }
 });
+
+// ─── Routes ────────────────────────────────────────────────────────────────
+
+// GET all services
 app.get('/api/services', async (req, res) => {
-    try {
-    const result = await pool.query("SELECT * FROM services ORDER BY id");
+  try {
+    const result = await pool.query('SELECT * FROM services ORDER BY id');
     res.json(result.rows);
   } catch (err) {
     console.error(err);
-    res.status(500).json({ error: "DB error" });
+    res.status(500).json({ error: 'Failed to fetch services' });
   }
 });
 
