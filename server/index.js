@@ -27,14 +27,13 @@ const pool = new Pool({
 
 // Nodemailer transporter (configure with your email service)
 const transporter = nodemailer.createTransport({
-  service: 'gmail',
+  host: 'smtp.gmail.com',
+  port: 465,
+  secure: true, 
   auth: {
     user: process.env.SMTP_USER,
-    pass: process.env.SMTP_PASS,
+    pass: process.env.SMTP_PASS, 
   },
-  tls: {
-    rejectUnauthorized: false
-  }
 });
 
 // ─── Routes ────────────────────────────────────────────────────────────────
@@ -60,9 +59,9 @@ app.post('/api/contact', async (req, res) => {
   try {
     // 1. Save to PostgreSQL
    const result = await pool.query(
-  'INSERT INTO contact_messages (name, email, phone, service, message) VALUES ($1,$2,$3,$4,$5) RETURNING *',
-  [name, email, phone || null, service || null, message]
-);
+      'INSERT INTO contact_messages (name, email, phone, service, message) VALUES ($1,$2,$3,$4,$5) RETURNING *',
+      [name, email, phone || null, service || null, message]
+    );
 
 console.log("DB INSERT SUCCESS:", result.rows);
 
@@ -109,16 +108,28 @@ console.log("DB INSERT SUCCESS:", result.rows);
       `,
     };
 
-    await Promise.all([
-     transporter.sendMail(mailToVibha),
-     transporter.sendMail(mailToUser)
-   ]);
+    try {
+      await Promise.all([
+        transporter.sendMail(mailToVibha),
+        transporter.sendMail(mailToUser)
+      ]);
+      console.log("Emails sent successfully");
+    } catch (emailErr) {
+      // We log this error but DO NOT send a 500 because the data is already in the DB
+      console.error("Email delivery failed:", emailErr.message);
+    }
 
-    res.json({ success: true, message: 'Message sent successfully!' });
+    // 4. Return success to the frontend
+    res.json({ 
+      success: true, 
+      message: 'Inquiry received! We will contact you soon.',
+      data: result.rows[0] 
+    });
+
   } catch (err) {
-    console.error("FULL ERROR:", err);
-    console.error("STACK:", err.stack);
-    res.status(500).json({ error: 'Failed to send message. Please try again.' });
+    // This catch only triggers if the Database fails
+    console.error("DATABASE ERROR:", err);
+    res.status(500).json({ error: 'System error. Please try again later.' });
   }
 });
 
