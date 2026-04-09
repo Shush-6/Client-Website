@@ -34,6 +34,9 @@ const transporter = nodemailer.createTransport({
     user: process.env.SMTP_USER,
     pass: process.env.SMTP_PASS, 
   },
+  tls: {
+    rejectUnauthorized: false
+  }
 });
 
 // ─── Routes ────────────────────────────────────────────────────────────────
@@ -107,17 +110,9 @@ console.log("DB INSERT SUCCESS:", result.rows);
         </div>
       `,
     };
-
-    try {
-      await Promise.all([
-        transporter.sendMail(mailToVibha),
-        transporter.sendMail(mailToUser)
-      ]);
-      console.log("Emails sent successfully");
-    } catch (emailErr) {
-      // We log this error but DO NOT send a 500 because the data is already in the DB
-      console.error("Email delivery failed:", emailErr.message);
-    }
+    
+    transporter.sendMail(mailToVibha).catch(err => console.error("Vibha mail failed:", err.message));
+    transporter.sendMail(mailToUser).catch(err => console.error("User mail failed:", err.message));
 
     // 4. Return success to the frontend
     res.json({ 
