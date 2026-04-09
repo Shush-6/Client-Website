@@ -109,8 +109,10 @@ console.log("DB INSERT SUCCESS:", result.rows);
       `,
     };
 
-    await transporter.sendMail(mailToVibha);
-    await transporter.sendMail(mailToUser);
+    await Promise.all([
+     transporter.sendMail(mailToVibha),
+     transporter.sendMail(mailToUser)
+   ]);
 
     res.json({ success: true, message: 'Message sent successfully!' });
   } catch (err) {
