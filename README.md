@@ -78,7 +78,7 @@ npm run dev:server   # Express API on http://localhost:5000
 npm run dev:client   # React app on http://localhost:3000
 ```
 
-Visit **http://localhost:3000** to see the website.
+Visit **https://reikisite.netlify.app/** to see the website.
 
 ---
 

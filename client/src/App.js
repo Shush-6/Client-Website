@@ -102,7 +102,7 @@ function App() {
           <p className="hero-subtitle">Reiki Healing & Energy Wellness by Vibha</p>
           <div className="hero-cta">
             <button className="btn-primary" onClick={() => scrollTo('contact')}>Book a Session</button>
-            <button className="btn-ghost" onClick={() => scrollTo('about')}>Meet Vibha</button>
+            <button className="btn-ghost" onClick={() => scrollTo('about')}>Meet Vibha Shukla</button>
           </div>
         </div>
         <div className="scroll-indicator" onClick={() => scrollTo('about')}>
@@ -120,7 +120,7 @@ function App() {
           </div>
           <div className="about-text">
             <p className="section-label">About</p>
-            <h2 className="section-title">Meet Vibha</h2>
+            <h2 className="section-title">Vibha Shukla</h2>
             <div className="golden-rule" />
             <p>
               With over a decade of experience in energy healing, I am a certified Reiki Master dedicated to helping you rediscover balance, peace, and vitality. My journey began with a personal healing experience that transformed my life — and I have since devoted myself to sharing that gift with others.
@@ -129,9 +129,9 @@ function App() {
               My practice, <strong>Golden Hands</strong>, is a sacred space where science and spirituality meet. I believe every person carries an innate capacity to heal, and Reiki is simply the channel through which we awaken it.
             </p>
             <div className="about-badges">
-              <span>🌸 Usui Reiki Master</span>
+              <span>🌸 Reiki Healing</span>
               <span>💎 Crystal Healing</span>
-              <span>🌀 Chakra Therapy</span>
+              <span>🌀 Chakra Healing</span>
               {/* <span>✨ 500+ Sessions</span> */}
             </div>
             <button className="btn-primary" onClick={() => scrollTo('contact')}>Connect with Me</button>
@@ -239,7 +239,7 @@ function App() {
                 <div className="form-row">
                   <div className="form-group">
                     <label>Your Name *</label>
-                    <input type="text" name="name" value={form.name} onChange={handleChange} required placeholder="Ananya Sharma" />
+                    <input type="text" name="name" value={form.name} onChange={handleChange} required placeholder="Your Name" />
                   </div>
                   <div className="form-group">
                     <label>Email Address *</label>
@@ -249,7 +249,7 @@ function App() {
                 <div className="form-row">
                   <div className="form-group">
                     <label>Phone Number</label>
-                    <input type="tel" name="phone" value={form.phone} onChange={handleChange} placeholder="+91 98765 43210" />
+                    <input type="tel" name="phone" value={form.phone} onChange={handleChange} placeholder="+91 99999 99999" />
                   </div>
                   <div className="form-group">
                     <label>Interested In</label>
