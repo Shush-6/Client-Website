@@ -80,22 +80,6 @@ npm run dev:client   # React app on http://localhost:3000
 
 Visit **https://reikisite.netlify.app/** to see the website.
 
----
-
-## 📸 Adding Vibha's Photo
-
-In `client/src/App.js`, find this line at the top:
-
-```js
-const VIBHA_PHOTO = 'https://images.unsplash.com/...';
-```
-
-Replace the URL with:
-- A local file: move the photo to `client/src/assets/vibha.jpg` and use `import vibhaPhoto from './assets/vibha.jpg'`
-- Or an online URL to Vibha's actual photo
-
----
-
 ## 📁 Project Structure
 
 ```
